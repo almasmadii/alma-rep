@@ -1,0 +1,30 @@
+from bs4 import BeautifulSoup
+import requests
+import smtplib
+import os
+from dotenv import load_dotenv
+url="https://www.amazon.ae/POP-Vinyl-TV-Stranger-Things/dp/B07N5WR2GC/ref=sr_1_5?crid=1XPC4AIJHLIC0&dib=eyJ2IjoiMSJ9.c2XpDNCq1ianKVrpenOXiHMY9_UhI8wqBZ43fiMGBRX-6Fe1hvR2ftLfVRbzbdwTr6J_JMlozr0dmqiYsWXYmzpWTpwSfxK8NYv75aHtm9vBZH4kRM2DdNyqtKQqYQP7AZlSZCbxLNI2RyBBR_hWFdpfe70iQ30lIyPp0ysI5_4Qb6vjfYB7SaJ0lBNY5ZtkfkCMBMZLyCozpHKDqQ8dJ2VTL8vVuPrgrDKZ5i6AgoqBULj1wJCkw-nizYPxrCGvQ9JWc_8OOofBdzjm98bjJQZgzVzrFAbcpRo8N6rIhrw.fScIyP1J04OOBtJjs6nIQ7uSB9TAEh9KfA4KQgantcI&dib_tag=se&keywords=stranger%2Bthings%2Bfunko%2Bpop%2Bmax&qid=1767634896&sprefix=stranger%2Bthings%2Bfunko%2Bpop%2Bmax%2B%2Caps%2C288&sr=8-5&th=1"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "Accept-Language": "en-US,en;q=0.9"
+}
+load_dotenv()
+response=requests.get(url,headers=headers)
+website=response.content
+soup=BeautifulSoup(website,"html.parser")
+price=soup.find("span",class_="a-offscreen").get_text()
+end_price=price.split("AED")[1]
+float_price=float(end_price)
+title=soup.find(id="productTitle").get_text().strip()
+target_price=130
+
+smtp=smtplib.SMTP
+if float_price<target_price:
+    message=f"{title} is on sale for {price}!"
+
+    with smtplib.SMTP(os.environ["SMTP_MAIL"],587) as connection:
+        connection.starttls()
+        result=connection.login(os.environ["MY_MAIL"],os.environ["EMAIL_PASSWORD"])
+        connection.sendmail(from_addr=os.environ["MY_MAIL"],to_addrs=os.environ["MY_MAIL"],
+        msg=f"Subject:Amazon Price Alert!\n\n{message}\n {url}".encode("utf-8")
+        )
