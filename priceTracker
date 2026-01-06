@@ -3,7 +3,7 @@ import requests
 import smtplib
 import os
 from dotenv import load_dotenv
-url="https://www.amazon.ae/POP-Vinyl-TV-Stranger-Things/dp/B07N5WR2GC/ref=sr_1_5?crid=1XPC4AIJHLIC0&dib=eyJ2IjoiMSJ9.c2XpDNCq1ianKVrpenOXiHMY9_UhI8wqBZ43fiMGBRX-6Fe1hvR2ftLfVRbzbdwTr6J_JMlozr0dmqiYsWXYmzpWTpwSfxK8NYv75aHtm9vBZH4kRM2DdNyqtKQqYQP7AZlSZCbxLNI2RyBBR_hWFdpfe70iQ30lIyPp0ysI5_4Qb6vjfYB7SaJ0lBNY5ZtkfkCMBMZLyCozpHKDqQ8dJ2VTL8vVuPrgrDKZ5i6AgoqBULj1wJCkw-nizYPxrCGvQ9JWc_8OOofBdzjm98bjJQZgzVzrFAbcpRo8N6rIhrw.fScIyP1J04OOBtJjs6nIQ7uSB9TAEh9KfA4KQgantcI&dib_tag=se&keywords=stranger%2Bthings%2Bfunko%2Bpop%2Bmax&qid=1767634896&sprefix=stranger%2Bthings%2Bfunko%2Bpop%2Bmax%2B%2Caps%2C288&sr=8-5&th=1"
+url="https://www.amazon.com/Funko-Pop-TV-Stranger-Things/dp/B09LHXY1YJ/ref=sr_1_2?crid=2J1A8SGXE7A9H&dib=eyJ2IjoiMSJ9.TFVOabNyv8Zmij00jh7562VxTWcngQsqJj1m2NrGaUihXrcpQnd9f2tnZQOhla28viv4N0lJXxGRu9df2rsxZcHnE5v6WBfVt-M2fwvyPvc83mUfCfZlzi5NrgvOvT7SBmJd9J9Ki30QZIaNjiE18g.3IxMyWDzSkv3A1sbaQoKJso4ZumMEion47a6JXeG_po&dib_tag=se&keywords=max%2Bmayfield&qid=1767687174&s=toys-and-games&sprefix=max%2Bmay%2Ctoys-and-games%2C331&sr=1-2&th=1"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
     "Accept-Language": "en-US,en;q=0.9"
@@ -13,10 +13,10 @@ response=requests.get(url,headers=headers)
 website=response.content
 soup=BeautifulSoup(website,"html.parser")
 price=soup.find("span",class_="a-offscreen").get_text()
-end_price=price.split("AED")[1]
+end_price=price.split("$")[1]
 float_price=float(end_price)
 title=soup.find(id="productTitle").get_text().strip()
-target_price=130
+target_price=40
 
 smtp=smtplib.SMTP
 if float_price<target_price:
